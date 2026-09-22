@@ -1,7 +1,5 @@
 # Getting started
 
-## About this project
-
 Unlatched puts io-homecontrol skylights and blinds on your own network, with a
 phone-friendly web page and an MQTT bridge, on about $10 of hardware. No cloud,
 no gateway, no subscription.
@@ -21,10 +19,6 @@ It was built to drive my **Velux skylights and blinds in AU** and should work
 elsewhere.
 
 This guide takes you from a bare board to opening a window from your phone.
-
-> Replace `YOUR-ORG/unlatched` throughout with wherever this repository actually
-> lives. Until the first release is published, **building from source is the
-> only route** — skip to [Option B](#option-b--build-from-source).
 
 ---
 
@@ -135,7 +129,7 @@ USB-serial adapter. If nothing shows up, hold **BOOT**, tap **RESET**, release
 ### Option A — flash a prebuilt binary
 
 Download `firmware.factory.bin` from the
-[releases page](https://github.com/YOUR-ORG/unlatched/releases) and write it at
+[releases page](https://github.com/charlem/unlatched/releases) and write it at
 offset 0. It is a merged image containing the bootloader, partition table and
 application, so this one command is the whole job.
 
