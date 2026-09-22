@@ -163,7 +163,7 @@ esptool.py --chip esp32c6 --port /dev/cu.usbmodem101 erase_flash
 ### Option B — build from source
 
 ```bash
-git clone https://github.com/YOUR-ORG/unlatched.git
+git clone https://github.com/charlem/unlatched.git
 ```
 
 ```bash
