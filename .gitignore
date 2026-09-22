@@ -1,0 +1,24 @@
+/.pio/
+/.idea/
+/docs/
+compile_commands.json
+git_rev_macro.py
+sdkconfig
+sdkconfig.HeltecESP32
+CMakeLists.txt
+.idea/inspectionProfiles/Project_Default.xml
+.vscode/settings.json
+.idea/IOWN_Mosto.iml
+include/MQTTHelper_h
+include/user_config.h
+# Generated from web/ by scripts/gen_web_assets.py on every build.
+include/web_assets.h
+test/variousHeater
+src/CMakeLists.txt
+/.vscode/
+/archives/lib/
+/build/
+/archives/
+*.org
+/.trunk
+/.github

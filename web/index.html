@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<!-- viewport-fit=cover so the bottom tab bar can sit under the home indicator
+     and pad itself out of the way with env(safe-area-inset-bottom). -->
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b1220" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f4f6fb" media="(prefers-color-scheme: light)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="/manifest.webmanifest">
+<title>Unlatched</title>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<header id="top">
+  <h1>Unlatched</h1>
+  <div id="conn" class="pill" title="Link to the rig">connecting</div>
+</header>
+
+<main>
+  <!-- 1. Rooms: the landing page, every device grouped by the room it is in -->
+  <section id="tab-rooms" class="tab">
+    <div id="rooms"></div>
+    <p class="empty" id="rooms-empty" hidden>
+      No devices yet. Add one from the <b>Devices</b> tab &mdash; nodes announce
+      themselves when a remote talks to them, so operating a remote once will
+      usually make them appear there.
+    </p>
+  </section>
+
+  <!-- 2. Devices: add, remove, pair and rename -->
+  <section id="tab-devices" class="tab" hidden>
+    <div class="card" id="pair-card">
+      <h2>Pair a remote</h2>
+      <p class="hint">
+        Arming answers any remote's discovery and accepts one system key, then
+        disarms itself. On the remote, run <b>Add device</b> &mdash; that is the
+        action that completes a key transfer; the other menu entries only
+        enumerate.
+      </p>
+      <div id="pair-live"></div>
+    </div>
+
+    <div class="card">
+      <h2>Heard on air</h2>
+      <p class="hint">
+        Nodes that have transmitted recently and are not in the list below.
+        Not everything here is yours &mdash; neighbouring installations answer
+        discovery too.
+      </p>
+      <div id="observed"></div>
+    </div>
+
+    <div class="card">
+      <h2>Devices</h2>
+      <div id="devlist"></div>
+    </div>
+  </section>
+
+  <!-- 3. Settings -->
+  <section id="tab-settings" class="tab" hidden>
+    <div id="settings"></div>
+  </section>
+
+  <!-- 4. Console: the same command parser the serial port and telnet drive -->
+  <section id="tab-console" class="tab" hidden>
+    <div class="console-wrap">
+      <pre id="log" aria-live="off"></pre>
+    </div>
+    <div class="chips" id="quick"></div>
+    <form id="console-form" autocomplete="off">
+      <input id="console-input" type="text" placeholder="type a command, or help"
+             autocapitalize="off" autocorrect="off" spellcheck="false">
+      <button type="submit" class="btn primary">Run</button>
+    </form>
+  </section>
+</main>
+
+<nav id="tabs">
+  <button data-tab="rooms" class="on">
+    <svg viewBox="0 0 24 24"><path d="M3 11 12 4l9 7v8a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>
+    <span>Rooms</span>
+  </button>
+  <button data-tab="devices">
+    <svg viewBox="0 0 24 24"><path d="M4 4h16v4H4zM4 10h16v4H4zM4 16h16v4H4z"/></svg>
+    <span>Devices</span>
+  </button>
+  <button data-tab="settings">
+    <svg viewBox="0 0 24 24"><path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8zm9 4-2.1-1.2.3-2.4-2.3-.9-1.2-2.1-2.3.6L11.6 3 9.8 4.6 7.5 4l-.6 2.3-2.2 1 .2 2.4L3 12l1.9 1.2-.2 2.4 2.2 1 .6 2.3 2.3-.6L11.6 21l1.8-1.6 2.3.6 1.2-2.1 2.3-.9-.3-2.4z"/></svg>
+    <span>Settings</span>
+  </button>
+  <button data-tab="console">
+    <svg viewBox="0 0 24 24"><path d="M3 4h18v16H3zM6 9l3 2.5L6 14M11 15h6"/></svg>
+    <span>Console</span>
+  </button>
+</nav>
+
+<div id="toast" role="status"></div>
+
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+# Modern C++ house style for this firmware.
+#
+# Google as the base rather than LLVM: it is the most widely used C++ style and
+# its defaults (no space before parens, attached braces, sorted includes) already
+# match how most of this tree was written.
+#
+# Three deliberate departures from stock Google:
+#   IndentWidth 4  -- what every file here already uses; 2 would rewrite the lot
+#                     for no benefit and make the protocol code harder to scan.
+#   ColumnLimit 100 -- the frame-decode and register-setup lines carry a lot of
+#                     context per line, and 80 breaks them into confetti.
+#   SortIncludes false -- include order here is load-bearing in places (board
+#                     configuration before the headers that read its macros).
+BasedOnStyle: Google
+Language: Cpp
+Standard: c++20
+
+IndentWidth: 4
+ColumnLimit: 100
+AccessModifierOffset: -2
+SortIncludes: false
+
+AllowShortFunctionsOnASingleLine: Inline
+AllowShortIfStatementsOnASingleLine: WithoutElse
+AllowShortLoopsOnASingleLine: true
+AllowShortCaseLabelsOnASingleLine: true
+
+# Comments here carry the reasoning behind protocol decisions and are wrapped by
+# hand to line up with the bytes they describe. Reflowing them would scramble
+# that, so leave them exactly as written.
+ReflowComments: false
+
+PointerAlignment: Right
+DerivePointerAlignment: false
+SpacesBeforeTrailingComments: 2

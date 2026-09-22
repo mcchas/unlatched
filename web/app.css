@@ -1,0 +1,441 @@
+/* Phone first. The rig is operated standing under a skylight with one hand, so
+   every control is at least 44px, the tab bar is at the bottom within thumb
+   reach, and nothing depends on hover. It scales up to a desktop browser by
+   capping the column width rather than by rearranging. */
+
+:root {
+  --bg: #f4f6fb;
+  --card: #ffffff;
+  --card-2: #eef1f7;
+  --ink: #16202e;
+  --ink-2: #5b6779;
+  --line: #dde3ec;
+  --accent: #2f6df6;
+  --accent-ink: #ffffff;
+  --ok: #1a9e5c;
+  --warn: #c8791a;
+  --bad: #d23b3b;
+  --radius: 14px;
+  --nav-h: 58px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0b1220;
+    --card: #141d2e;
+    --card-2: #1b2639;
+    --ink: #e7edf7;
+    --ink-2: #93a1b7;
+    --line: #26324a;
+    --accent: #5b8cff;
+    --accent-ink: #0b1220;
+    --ok: #35c07d;
+    --warn: #e0a049;
+    --bad: #ef6363;
+  }
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 16px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  padding-bottom: calc(var(--nav-h) + env(safe-area-inset-bottom));
+}
+
+header {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: calc(10px + env(safe-area-inset-top)) 16px 10px;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+
+header h1 {
+  font-size: 19px;
+  margin: 0;
+  letter-spacing: 0.2px;
+  flex: 1;
+}
+
+main {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 12px 16px 24px;
+}
+
+h2 {
+  font-size: 15px;
+  margin: 0 0 8px;
+  letter-spacing: 0.2px;
+}
+
+.hint {
+  color: var(--ink-2);
+  font-size: 13px;
+  margin: 0 0 12px;
+}
+
+/* Colouring a word rather than a pill: used on read-only status lines where a
+   badge would be too loud for something that is usually fine. */
+.ok   { color: var(--ok); }
+.warn { color: var(--warn); }
+.bad  { color: var(--bad); }
+
+/* A fold for settings that have a sensible default and rarely want touching.
+   Collapsed, they keep the card short enough to take in at a glance on a
+   phone; the marker is restyled because the platform triangles differ enough
+   between browsers to look like a mistake. */
+.fold {
+  border-top: 1px solid var(--line);
+  margin: 12px 0;
+  padding-top: 10px;
+}
+.fold > summary {
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-2);
+  list-style: none;
+  padding: 6px 0;
+  /* 44px of touch target without 44px of visible chrome. */
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.fold > summary::-webkit-details-marker { display: none; }
+.fold > summary::before {
+  content: '';
+  width: 0;
+  height: 0;
+  border: 4px solid transparent;
+  border-left-color: currentColor;
+  transition: transform 0.15s ease;
+}
+.fold[open] > summary::before { transform: rotate(90deg) translateX(-1px); }
+
+.empty {
+  color: var(--ink-2);
+  font-size: 14px;
+  text-align: center;
+  padding: 28px 8px;
+}
+
+/* ---------------------------------------------------------------- cards */
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 14px;
+  margin-bottom: 14px;
+}
+
+.group-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.group-head h2 {
+  margin: 0;
+  flex: 1;
+  text-transform: capitalize;
+}
+
+/* ---------------------------------------------------------------- pills */
+
+.pill {
+  font-size: 12px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: var(--card-2);
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+
+.pill.ok    { color: var(--ok);    background: color-mix(in srgb, var(--ok) 15%, transparent); }
+.pill.warn  { color: var(--warn);  background: color-mix(in srgb, var(--warn) 18%, transparent); }
+.pill.bad   { color: var(--bad);   background: color-mix(in srgb, var(--bad) 15%, transparent); }
+.pill.busy  { color: var(--accent); background: color-mix(in srgb, var(--accent) 16%, transparent); }
+
+/* --------------------------------------------------------------- device */
+
+.dev {
+  border-top: 1px solid var(--line);
+  padding: 12px 0 4px;
+}
+.dev:first-child { border-top: 0; padding-top: 2px; }
+
+.dev-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dev-icon {
+  width: 30px;
+  height: 30px;
+  flex: none;
+  color: var(--ink-2);
+}
+.dev-icon svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 1.7; }
+
+.dev-name {
+  flex: 1;
+  min-width: 0;
+}
+.dev-name b {
+  display: block;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+/* Wraps rather than truncating. At 375px an ellipsis ate the end of every
+   subtitle -- the node address, the signal, how long ago it was heard -- which
+   is exactly the part that tells one unadopted node from another. */
+.dev-name small {
+  display: block;
+  color: var(--ink-2);
+  font-size: 12.5px;
+  line-height: 1.35;
+}
+
+/* The position read-out: filled from the left in proportion to how open the
+   device is, so a glance down a room's list shows what is where. */
+.bar {
+  position: relative;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--card-2);
+  margin: 10px 0 2px;
+  overflow: hidden;
+}
+.bar > i {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: var(--accent);
+  border-radius: 999px;
+  transition: width .4s ease;
+}
+.bar.unknown > i { background: repeating-linear-gradient(90deg, var(--line) 0 6px, transparent 6px 12px); }
+.bar.moving > i { animation: pulse 1.4s ease-in-out infinite; }
+
+@keyframes pulse { 50% { opacity: .55; } }
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+.row.wrap { flex-wrap: wrap; }
+
+/* -------------------------------------------------------------- controls */
+
+.btn {
+  font: inherit;
+  font-size: 14px;
+  min-height: 44px;
+  padding: 0 14px;
+  border-radius: 11px;
+  border: 1px solid var(--line);
+  background: var(--card-2);
+  color: var(--ink);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn:active { transform: scale(.97); }
+.btn.primary { background: var(--accent); color: var(--accent-ink); border-color: transparent; font-weight: 600; }
+.btn.danger  { color: var(--bad); }
+.btn.grow    { flex: 1; }
+.btn.small   { min-height: 36px; font-size: 13px; padding: 0 10px; }
+.btn[disabled] { opacity: .45; cursor: default; }
+
+input[type="text"], input[type="password"], input[type="number"], select {
+  font: inherit;
+  font-size: 16px; /* 16px or iOS zooms the page on focus */
+  min-height: 44px;
+  width: 100%;
+  padding: 0 11px;
+  border-radius: 11px;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--ink);
+}
+
+label.field {
+  display: block;
+  margin-bottom: 10px;
+}
+label.field span {
+  display: block;
+  font-size: 12.5px;
+  color: var(--ink-2);
+  margin-bottom: 4px;
+}
+label.check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  font-size: 14px;
+}
+label.check input { width: 22px; height: 22px; }
+
+.two { display: flex; gap: 10px; }
+.two > * { flex: 1; }
+
+input[type="range"] {
+  flex: 1;
+  min-width: 0;
+  height: 44px;
+  accent-color: var(--accent);
+  background: transparent;
+}
+input[type="range"][disabled] { opacity: .35; }
+
+.pct {
+  font-variant-numeric: tabular-nums;
+  font-size: 14px;
+  color: var(--ink-2);
+  min-width: 46px;
+  text-align: right;
+}
+
+/* ------------------------------------------------------------- edit form */
+
+.editor {
+  margin-top: 12px;
+  padding: 12px;
+  border-radius: 11px;
+  background: var(--card-2);
+}
+
+.kv {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 13.5px;
+  padding: 6px 0;
+  border-top: 1px solid var(--line);
+}
+.kv:first-child { border-top: 0; }
+.kv span { color: var(--ink-2); }
+.kv b { font-weight: 600; font-variant-numeric: tabular-nums; }
+
+code, .mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12.5px;
+}
+
+/* --------------------------------------------------------------- console */
+
+.console-wrap {
+  background: #0a0f1a;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+#log {
+  margin: 0;
+  padding: 10px;
+  height: 58vh;
+  overflow: auto;
+  color: #c7d5ea;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  word-break: break-word;
+  -webkit-overflow-scrolling: touch;
+}
+
+.chips {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 10px 0;
+  scrollbar-width: none;
+}
+.chips::-webkit-scrollbar { display: none; }
+.chips .btn { white-space: nowrap; min-height: 36px; font-size: 13px; }
+
+#console-form { display: flex; gap: 8px; }
+#console-form input { flex: 1; }
+
+/* ------------------------------------------------------------------ nav */
+
+#tabs {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  z-index: 10;
+  display: flex;
+  background: color-mix(in srgb, var(--card) 92%, transparent);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid var(--line);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+#tabs button {
+  flex: 1;
+  height: var(--nav-h);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  border: 0;
+  background: none;
+  color: var(--ink-2);
+  font: inherit;
+  font-size: 11px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+#tabs button svg {
+  width: 22px; height: 22px;
+  fill: none; stroke: currentColor; stroke-width: 1.8;
+  stroke-linejoin: round; stroke-linecap: round;
+}
+#tabs button.on { color: var(--accent); }
+
+/* ---------------------------------------------------------------- toast */
+
+#toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(var(--nav-h) + env(safe-area-inset-bottom) + 14px);
+  transform: translate(-50%, 16px);
+  max-width: min(92vw, 420px);
+  padding: 10px 16px;
+  border-radius: 12px;
+  background: var(--ink);
+  color: var(--bg);
+  font-size: 14px;
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .18s, transform .18s;
+  z-index: 20;
+}
+#toast.show { opacity: 1; transform: translate(-50%, 0); }
+#toast.bad { background: var(--bad); color: #fff; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
