@@ -1,6 +1,5 @@
 /.pio/
 /.idea/
-/docs/
 compile_commands.json
 git_rev_macro.py
 sdkconfig
@@ -21,4 +20,5 @@ src/CMakeLists.txt
 /archives/
 *.org
 /.trunk
-/.github
+# Web flasher assembled locally for testing (see scripts/flasher_manifest.py).
+/_site/

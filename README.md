@@ -26,7 +26,7 @@ This guide takes you from a bare board to opening a window from your phone.
 
 1. [What you need](#1-what-you-need)
 2. [Wiring](#2-wiring)
-3. [Flashing](#3-flashing) — [prebuilt binary](#option-a--flash-a-prebuilt-binary) or [from source](#option-b--build-from-source)
+3. [Flashing](#3-flashing) — [from your browser](#the-easy-way--flash-from-your-browser), [prebuilt binary](#option-a--flash-a-prebuilt-binary) or [from source](#option-b--build-from-source)
 4. [Joining your Wi-Fi](#4-joining-your-wi-fi)
 5. [Settings, including MQTT](#5-settings-including-mqtt)
 6. [Pairing a KLR 200 remote](#6-pairing-a-klr-200-remote)
@@ -69,7 +69,24 @@ This guide takes you from a bare board to opening a window from your phone.
 
 ## 3. Flashing
 
+### The easy way — flash from your browser
+
+Open the **[web flasher](https://mcchas.github.io/unlatched/)** in Chrome, Edge
+or Firefox 151+ on a desktop or laptop, plug the board in with a data cable and
+click **Connect & install**. Nothing needs installing, and once it finishes you
+can skip ahead to [§4](#4-joining-your-wi-fi).
+
+It installs the same `firmware.factory.bin` as the latest
+[release](https://github.com/mcchas/unlatched/releases), which GitHub Actions
+builds from the tagged commit. Leave **Erase device** unticked when updating a
+rig that is already paired: erasing wipes its node address and stored keys.
+
+Safari and phone browsers can't flash from a web page. Use one of the options
+below instead.
+
 ### Install the tools
+
+These are only needed for Options A and B.
 
 <details open>
 <summary><b>macOS</b></summary>
@@ -129,7 +146,7 @@ USB-serial adapter. If nothing shows up, hold **BOOT**, tap **RESET**, release
 ### Option A — flash a prebuilt binary
 
 Download `firmware.factory.bin` from the
-[releases page](https://github.com/charlem/unlatched/releases) and write it at
+[releases page](https://github.com/mcchas/unlatched/releases) and write it at
 offset 0. It is a merged image containing the bootloader, partition table and
 application, so this one command is the whole job.
 
@@ -163,11 +180,11 @@ esptool.py --chip esp32c6 --port /dev/cu.usbmodem101 erase_flash
 ### Option B — build from source
 
 ```bash
-git clone https://github.com/charlem/unlatched.git
+git clone https://github.com/mcchas/unlatched.git
 ```
 
 ```bash
-cd unlatched/firmware && pio run -e XiaoC6RF231
+cd unlatched && pio run -e XiaoC6RF231
 ```
 
 The first build downloads the toolchain and takes a few minutes; afterwards it
@@ -370,6 +387,19 @@ Then:
 ```bash
 pio run -e XiaoC6RF231_ota -t upload
 ```
+
+To install a release without building, download its `firmware.bin` (not the
+factory image) and push it with
+[`espota.py`](https://github.com/espressif/arduino-esp32/blob/master/tools/espota.py)
+from arduino-esp32:
+
+```bash
+python3 espota.py -r -i 192.168.1.50 -p 8266 -f firmware.bin
+```
+
+If the rig is on a different subnet from your computer, also pin the port it
+connects back on with `-P 8267`, and open that port in your firewall. The
+comments under `[env:XiaoC6RF231_ota]` explain why.
 
 The partition table reserves two application slots. An OTA writes into the
 inactive one and swaps, and if the new image fails to stay up for 60 seconds
