@@ -9,7 +9,6 @@ CMakeLists.txt
 .vscode/settings.json
 .idea/IOWN_Mosto.iml
 include/MQTTHelper_h
-include/user_config.h
 # Generated from web/ by scripts/gen_web_assets.py on every build.
 include/web_assets.h
 test/variousHeater
