@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unlatched Flasher</title>
+<meta name="description" content="Flash Unlatched onto a Seeed XIAO ESP32-C6 from your browser.">
+<!-- ESP Web Tools: the install button and dialog. Reads manifest.json, which
+     the CI workflow writes next to this page along with firmware.factory.bin. -->
+<script type="module" src="https://unpkg.com/esp-web-tools@10.4.0/dist/web/install-button.js?module"></script>
+<style>
+  /* Same palette as the rig's own web UI (web/app.css). */
+  :root {
+    --bg: #f4f6fb;
+    --card: #ffffff;
+    --card-2: #eef1f7;
+    --ink: #16202e;
+    --ink-2: #5b6779;
+    --line: #dde3ec;
+    --accent: #2f6df6;
+    --accent-ink: #ffffff;
+    --warn: #c8791a;
+    --warn-bg: #fdf3e6;
+    --radius: 14px;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0b1220;
+      --card: #141d2e;
+      --card-2: #1b2639;
+      --ink: #e7edf7;
+      --ink-2: #93a1b7;
+      --line: #26324a;
+      --accent: #5b8cff;
+      --accent-ink: #0b1220;
+      --warn: #e0a049;
+      --warn-bg: #2a2214;
+      color-scheme: dark;
+    }
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    -webkit-text-size-adjust: 100%;
+    /* ESP Web Tools dialog colours. */
+    --improv-primary-color: var(--accent);
+    --improv-on-primary-color: var(--accent-ink);
+  }
+  main { max-width: 640px; margin: 0 auto; padding: 32px 16px 48px; }
+
+  header { margin-bottom: 24px; }
+  .brand { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  h1 { font-size: 28px; line-height: 1.2; margin: 0; letter-spacing: -0.01em; }
+  .version {
+    font: 13px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+    color: var(--ink-2);
+    background: var(--card-2);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 5px 10px;
+  }
+  .lede { color: var(--ink-2); margin: 8px 0 0; }
+
+  section {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  h2 { font-size: 17px; margin: 0 0 10px; }
+  p { margin: 0 0 10px; }
+  p:last-child, ol:last-child, ul:last-child { margin-bottom: 0; }
+  ol, ul { margin: 0 0 10px; padding-left: 22px; }
+  li + li { margin-top: 6px; }
+  a { color: var(--accent); }
+  code {
+    font: 14px ui-monospace, SFMono-Regular, Menlo, monospace;
+    background: var(--card-2);
+    border-radius: 6px;
+    padding: 1px 5px;
+    overflow-wrap: anywhere;
+  }
+  pre {
+    margin: 10px 0 0;
+    background: var(--card-2);
+    border-radius: 10px;
+    padding: 12px;
+    overflow-x: auto;
+  }
+  pre code { background: none; padding: 0; white-space: pre; overflow-wrap: normal; }
+  .muted { color: var(--ink-2); font-size: 14px; }
+
+  .install { text-align: center; padding: 28px 20px; }
+  .install-btn {
+    appearance: none;
+    border: 0;
+    border-radius: 12px;
+    background: var(--accent);
+    color: var(--accent-ink);
+    font: 600 17px/1 inherit;
+    font-family: inherit;
+    min-height: 52px;
+    padding: 0 28px;
+    cursor: pointer;
+  }
+  .install-btn:hover { filter: brightness(1.08); }
+  .install-btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+  .install .muted { margin-top: 14px; }
+  .notice { text-align: left; }
+
+  .warn { background: var(--warn-bg); border-color: color-mix(in srgb, var(--warn) 40%, transparent); }
+  .warn h2 { color: var(--warn); }
+
+  footer { color: var(--ink-2); font-size: 14px; text-align: center; margin-top: 24px; }
+  footer a { color: inherit; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <div class="brand">
+      <h1>Unlatched flasher</h1>
+      <span class="version" id="version" hidden></span>
+    </div>
+    <p class="lede">Put the firmware on a Seeed XIAO ESP32-C6 straight from this page, with nothing to install.</p>
+  </header>
+
+  <section class="install">
+    <esp-web-install-button manifest="manifest.json">
+      <button slot="activate" class="install-btn">Connect &amp; install</button>
+      <div slot="unsupported" class="notice">
+        <h2>This browser can't talk to USB serial devices</h2>
+        <p>Open this page in Chrome, Edge or Firefox 151 or newer, on a desktop or laptop. Phones and Safari can't flash a board from a web page.</p>
+        <p>Or flash from a terminal with <code>esptool</code>, as shown further down.</p>
+      </div>
+      <div slot="not-allowed" class="notice">
+        <h2>Open this page over HTTPS</h2>
+        <p>Browsers allow serial access only from HTTPS pages or <code>localhost</code>.</p>
+      </div>
+    </esp-web-install-button>
+    <p class="muted">Works in Chrome, Edge and Firefox 151+ on desktop.</p>
+  </section>
+
+  <section>
+    <h2>Before you start</h2>
+    <ol>
+      <li>Plug the XIAO into this computer with a <strong>data</strong> USB-C cable. A charge-only cable is the usual reason a board doesn't show up.</li>
+      <li>Click <strong>Connect &amp; install</strong> and pick the board from the list. It's usually named <em>USB JTAG/serial debug unit</em>.</li>
+      <li>If it isn't listed, hold <strong>BOOT</strong>, tap <strong>RESET</strong>, release <strong>BOOT</strong>, then try again.</li>
+    </ol>
+  </section>
+
+  <section class="warn">
+    <h2>Leave “Erase device” unticked when updating</h2>
+    <p>Erasing wipes everything the rig has stored: its node address, the keys it shares with your windows, and your Wi-Fi and MQTT settings. A rig that's already paired would need pairing again.</p>
+    <p>Tick it only for a board that has never run Unlatched, or one that was running something else.</p>
+  </section>
+
+  <section>
+    <h2>After flashing</h2>
+    <ol>
+      <li>The board restarts and opens a Wi-Fi network named <strong>velux-rig-setup</strong>.</li>
+      <li>Join it from your phone and choose your home Wi-Fi on the page that opens.</li>
+      <li>Carry on from <a href="https://github.com/mcchas/unlatched#4-joining-your-wi-fi">Joining your Wi-Fi</a> in the guide.</li>
+    </ol>
+    <p class="muted">A rig that's already on your network can be updated over the air instead. Use <code>firmware.bin</code> from the <a href="https://github.com/mcchas/unlatched/releases/latest">latest release</a>.</p>
+  </section>
+
+  <section>
+    <h2>Flashing from a terminal instead</h2>
+    <p>Download <a href="firmware.factory.bin" download>firmware.factory.bin</a> (the same image this page installs) and write it at offset 0:</p>
+    <pre><code>esptool.py --chip esp32c6 --port /dev/cu.usbmodem101 write_flash 0x0 firmware.factory.bin</code></pre>
+  </section>
+
+  <footer>
+    <a href="https://github.com/mcchas/unlatched">Source &amp; guide</a> ·
+    <a href="https://github.com/mcchas/unlatched/releases">Releases</a> ·
+    Flashing by <a href="https://esphome.github.io/esp-web-tools/">ESP Web Tools</a>
+  </footer>
+</main>
+<script>
+  // Show which build this page installs. manifest.json is written by CI; it is
+  // missing when the page is opened straight from the repo, so stay quiet then.
+  fetch("manifest.json")
+    .then((r) => (r.ok ? r.json() : null))
+    .then((m) => {
+      if (!m || !m.version) return;
+      const el = document.getElementById("version");
+      el.textContent = m.version;
+      el.hidden = false;
+    })
+    .catch(() => {});
+</script>
+</body>
+</html>
